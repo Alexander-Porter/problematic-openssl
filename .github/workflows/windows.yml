@@ -44,6 +44,12 @@ jobs:
         mkdir _dest
         nmake install DESTDIR=_dest
       working-directory: _build
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{matrix.os}}-${{ matrix.platform.arch }}
+        path: _build/
   plain:
     strategy:
       matrix:
@@ -86,4 +92,5 @@ jobs:
     - name: build
       working-directory: _build
       run: nmake # verbose, so no /S here
+
 

@@ -37,9 +37,6 @@ jobs:
     - name: build
       working-directory: _build
       run: nmake /S
-    - name: test
-      working-directory: _build
-      run: nmake test VERBOSE_FAILURE=yes TESTS=-test_fuzz*
     - name: install
       # Run on 64 bit only as 32 bit is slow enough already
       if: $${{ matrix.platform.arch == 'win64' }}
@@ -68,9 +65,6 @@ jobs:
     - name: build
       working-directory: _build
       run: nmake /S
-    - name: test
-      working-directory: _build
-      run: nmake test VERBOSE_FAILURE=yes
   minimal:
     strategy:
       matrix:

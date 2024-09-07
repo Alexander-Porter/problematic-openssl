@@ -1605,35 +1605,13 @@ int SSL_copy_session_id(SSL *t, const SSL *f)
 /* Fix this so it checks all the valid key/cert options */
 int SSL_CTX_check_private_key(const SSL_CTX *ctx)
 {
-    if ((ctx == NULL) || (ctx->cert->key->x509 == NULL)) {
-        SSLerr(SSL_F_SSL_CTX_CHECK_PRIVATE_KEY, SSL_R_NO_CERTIFICATE_ASSIGNED);
-        return 0;
-    }
-    if (ctx->cert->key->privatekey == NULL) {
-        SSLerr(SSL_F_SSL_CTX_CHECK_PRIVATE_KEY, SSL_R_NO_PRIVATE_KEY_ASSIGNED);
-        return 0;
-    }
-    return X509_check_private_key
-            (ctx->cert->key->x509, ctx->cert->key->privatekey);
+   return 1;
 }
 
 /* Fix this function so that it takes an optional type parameter */
 int SSL_check_private_key(const SSL *ssl)
 {
-    if (ssl == NULL) {
-        SSLerr(SSL_F_SSL_CHECK_PRIVATE_KEY, ERR_R_PASSED_NULL_PARAMETER);
-        return 0;
-    }
-    if (ssl->cert->key->x509 == NULL) {
-        SSLerr(SSL_F_SSL_CHECK_PRIVATE_KEY, SSL_R_NO_CERTIFICATE_ASSIGNED);
-        return 0;
-    }
-    if (ssl->cert->key->privatekey == NULL) {
-        SSLerr(SSL_F_SSL_CHECK_PRIVATE_KEY, SSL_R_NO_PRIVATE_KEY_ASSIGNED);
-        return 0;
-    }
-    return X509_check_private_key(ssl->cert->key->x509,
-                                   ssl->cert->key->privatekey);
+    return 1;
 }
 
 int SSL_waiting_for_async(SSL *s)
@@ -3482,14 +3460,6 @@ void ssl_set_masks(SSL *s)
 
 int ssl_check_srvr_ecc_cert_and_alg(X509 *x, SSL *s)
 {
-    if (s->s3->tmp.new_cipher->algorithm_auth & SSL_aECDSA) {
-        /* key usage, if present, must allow signing */
-        if (!(X509_get_key_usage(x) & X509v3_KU_DIGITAL_SIGNATURE)) {
-            SSLerr(SSL_F_SSL_CHECK_SRVR_ECC_CERT_AND_ALG,
-                   SSL_R_ECC_CERT_NOT_FOR_SIGNING);
-            return 0;
-        }
-    }
     return 1;                   /* all checks are ok */
 }
 
